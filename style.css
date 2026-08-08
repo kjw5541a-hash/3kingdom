@@ -1,0 +1,583 @@
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #17130f;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    sans-serif;
+  color: #f5ead2;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  outline: 0;
+}
+
+#game {
+  width: 100%;
+  height: 100dvh;
+  max-width: 600px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  background: #272019;
+}
+
+
+/* =========================
+   상단
+========================= */
+
+.topbar {
+  height: 72px;
+  padding:
+    calc(env(safe-area-inset-top) + 10px)
+    16px
+    8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #191510;
+  border-bottom: 1px solid #594a34;
+  position: relative;
+  z-index: 20;
+}
+
+.game-title {
+  font-family: serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#date {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #c7b28a;
+}
+
+.resources {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+
+  font-size: 13px;
+}
+
+.resources b {
+  color: #f4d98a;
+}
+
+
+/* =========================
+   지도
+========================= */
+
+#map {
+  position: absolute;
+  top: 72px;
+  bottom: 82px;
+  left: 0;
+  right: 0;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      #8c805e 0%,
+      #756b4e 50%,
+      #5b523d 100%
+    );
+}
+
+
+/* 지도 질감 */
+
+#map::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.16;
+
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 5px,
+      rgba(40,30,20,.25) 6px
+    );
+
+  pointer-events: none;
+}
+
+
+/* 강 */
+
+.river {
+  position: absolute;
+  height: 18px;
+
+  background: rgba(55,90,105,.55);
+  border-radius: 50%;
+  transform: rotate(-20deg);
+
+  filter: blur(1px);
+}
+
+.r1 {
+  width: 120%;
+  left: -10%;
+  top: 52%;
+}
+
+.r2 {
+  width: 80%;
+  right: -20%;
+  top: 69%;
+  transform: rotate(14deg);
+}
+
+
+/* 산 */
+
+.mountain {
+  position: absolute;
+  width: 150px;
+  height: 50px;
+
+  background:
+    linear-gradient(
+      135deg,
+      transparent 35%,
+      rgba(65,58,42,.55) 36%,
+      rgba(65,58,42,.55) 65%,
+      transparent 66%
+    );
+
+  opacity: .65;
+}
+
+.m1 {
+  left: -20px;
+  top: 16%;
+}
+
+.m2 {
+  right: -40px;
+  top: 37%;
+  transform: rotate(15deg);
+}
+
+.m3 {
+  left: 15%;
+  bottom: 8%;
+  transform: rotate(-10deg);
+}
+
+
+/* 지도 중앙 글자 */
+
+.map-label {
+  position: absolute;
+  left: 50%;
+  top: 17%;
+
+  transform: translateX(-50%);
+
+  font-family: serif;
+  font-size: 34px;
+
+  color: rgba(55,42,25,.20);
+  letter-spacing: 12px;
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   도시
+========================= */
+
+.city {
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: transparent;
+
+  min-width: 55px;
+  padding: 5px;
+
+  cursor: pointer;
+
+  z-index: 5;
+}
+
+.city-icon {
+  width: 35px;
+  height: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eee2c4;
+  border: 2px solid #34291c;
+  border-radius: 50%;
+
+  font-size: 20px;
+
+  box-shadow:
+    0 2px 4px rgba(0,0,0,.35);
+}
+
+.city span:last-child {
+  margin-top: 2px;
+
+  padding: 2px 6px;
+
+  background: rgba(30,24,18,.75);
+  border-radius: 4px;
+
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+
+/* 세력별 도시 */
+
+.city.cao .city-icon {
+  border-color: #9c4c3c;
+}
+
+.city.liu .city-icon {
+  border-color: #3d7190;
+}
+
+.city.sun .city-icon {
+  border-color: #a17b36;
+}
+
+.city.neutral .city-icon {
+  border-color: #666;
+}
+
+
+/* 터치 효과 */
+
+.city:active {
+  transform: translate(-50%, -50%) scale(.9);
+}
+
+
+/* =========================
+   도시 패널
+========================= */
+
+.panel {
+  position: absolute;
+
+  left: 10px;
+  right: 10px;
+  bottom: 92px;
+
+  max-height: calc(100dvh - 150px);
+
+  padding: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #30271d,
+      #211b15
+    );
+
+  border: 1px solid #806a45;
+  border-radius: 16px;
+
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.6);
+
+  z-index: 30;
+
+  overflow-y: auto;
+
+  animation: panelUp .2s ease-out;
+}
+
+@keyframes panelUp {
+
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+}
+
+.hidden {
+  display: none;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+
+  width: 35px;
+  height: 35px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.08);
+
+  font-size: 25px;
+}
+
+
+/* 패널 제목 */
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding-bottom: 14px;
+  border-bottom: 1px solid #4f412e;
+}
+
+.panel-title > span {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eee2c4;
+  border-radius: 50%;
+
+  font-size: 26px;
+}
+
+.panel-title h2 {
+  margin: 0;
+
+  font-family: serif;
+  font-size: 22px;
+}
+
+.panel-title small {
+  color: #b9a681;
+}
+
+
+/* 도시 정보 */
+
+.city-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.city-stats div {
+  padding: 10px;
+
+  background: rgba(255,255,255,.045);
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.city-stats span {
+  color: #a99a7e;
+  font-size: 12px;
+}
+
+.city-stats b {
+  font-size: 13px;
+}
+
+
+/* 개발 */
+
+.development {
+  margin-top: 16px;
+}
+
+.develop-row {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 9px;
+
+  font-size: 13px;
+}
+
+.develop-row b {
+  color: #e4ca88;
+}
+
+.bar {
+  height: 5px;
+
+  margin-top: 5px;
+
+  background: #17130f;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar div {
+  height: 100%;
+
+  width: 0;
+
+  background: #b88b42;
+
+  transition: width .25s;
+}
+
+
+/* 행동 */
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 8px;
+
+  margin-top: 17px;
+}
+
+.action {
+  min-height: 72px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #403427;
+
+  border: 1px solid #625039;
+  border-radius: 9px;
+}
+
+.action span {
+  font-size: 20px;
+}
+
+.action b {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.action small {
+  margin-top: 2px;
+
+  color: #a89b83;
+  font-size: 9px;
+}
+
+.action:active {
+  background: #5a4730;
+  transform: scale(.97);
+}
+
+
+/* =========================
+   하단 메뉴
+========================= */
+
+.bottom-menu {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: calc(82px + env(safe-area-inset-bottom));
+
+  padding:
+    6px
+    5px
+    calc(6px + env(safe-area-inset-bottom));
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+
+  background: #18130f;
+  border-top: 1px solid #594a34;
+
+  z-index: 40;
+}
+
+.bottom-menu button {
+  background: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  border-radius: 8px;
+}
+
+.bottom-menu button:active {
+  background: rgba(255,255,255,.08);
+}
+
+.bottom-menu span {
+  font-size: 19px;
+}
+
+.bottom-menu small {
+  color: #a99a80;
+  font-size: 9px;
+}
+
+
+/* 다음 턴 */
+
+#nextTurn {
+  background: #57452d;
+  border: 1px solid #80663e;
+}
+
+#nextTurn small {
+  color: #f0d69b;
+}
