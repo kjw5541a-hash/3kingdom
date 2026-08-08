@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,
+                 maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#17130f">
+  <title>삼국지: 천하</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="game">
+
+  <!-- 상단 상태 -->
+  <header class="topbar">
+    <div>
+      <div class="game-title">三國志 · 天下</div>
+      <div id="date">190년 봄</div>
+    </div>
+
+    <div class="resources">
+      <span>💰 <b id="gold">3200</b></span>
+      <span>🌾 <b id="food">8500</b></span>
+    </div>
+  </header>
+
+
+  <!-- 지도 -->
+  <main id="map">
+
+    <div class="mountain m1"></div>
+    <div class="mountain m2"></div>
+    <div class="mountain m3"></div>
+
+    <button class="city cao" data-city="낙양"
+            style="left:50%;top:39%;">
+      <span class="city-icon">🏯</span>
+      <span>낙양</span>
+    </button>
+
+    <button class="city cao" data-city="허창"
+            style="left:55%;top:58%;">
+      <span class="city-icon">🏯</span>
+      <span>허창</span>
+    </button>
+
+    <button class="city cao" data-city="장안"
+            style="left:25%;top:45%;">
+      <span class="city-icon">🏯</span>
+      <span>장안</span>
+    </button>
+
+    <button class="city liu" data-city="신야"
+            style="left:43%;top:69%;">
+      <span class="city-icon">🏯</span>
+      <span>신야</span>
+    </button>
+
+    <button class="city sun" data-city="건업"
+            style="left:72%;top:72%;">
+      <span class="city-icon">🏯</span>
+      <span>건업</span>
+    </button>
+
+    <button class="city sun" data-city="회계"
+            style="left:82%;top:82%;">
+      <span class="city-icon">🏯</span>
+      <span>회계</span>
+    </button>
+
+    <button class="city cao" data-city="업"
+            style="left:67%;top:25%;">
+      <span class="city-icon">🏯</span>
+      <span>업</span>
+    </button>
+
+    <button class="city neutral" data-city="성도"
+            style="left:13%;top:75%;">
+      <span class="city-icon">🏯</span>
+      <span>성도</span>
+    </button>
+
+    <button class="city neutral" data-city="양양"
+            style="left:89%;top:43%;">
+      <span class="city-icon">🏯</span>
+      <span>양양</span>
+    </button>
+
+    <button class="city neutral" data-city="북해"
+            style="left:82%;top:22%;">
+      <span class="city-icon">🏯</span>
+      <span>북해</span>
+    </button>
+
+    <!-- 지도 장식 -->
+    <div class="river r1"></div>
+    <div class="river r2"></div>
+
+    <div class="map-label">중 원</div>
+
+  </main>
+
+
+  <!-- 도시 정보 -->
+  <section id="cityPanel" class="panel hidden">
+
+    <button id="closePanel" class="close">×</button>
+
+    <div class="panel-title">
+      <span id="panelCityIcon">🏯</span>
+      <div>
+        <h2 id="panelCity">낙양</h2>
+        <small id="panelFaction">조조 세력</small>
+      </div>
+    </div>
+
+    <div class="city-stats">
+      <div>
+        <span>인구</span>
+        <b id="population">82,000</b>
+      </div>
+
+      <div>
+        <span>금</span>
+        <b id="cityGold">3,200</b>
+      </div>
+
+      <div>
+        <span>군량</span>
+        <b id="cityFood">8,500</b>
+      </div>
+
+      <div>
+        <span>병력</span>
+        <b id="soldiers">12,000</b>
+      </div>
+    </div>
+
+    <div class="development">
+
+      <div class="develop-row">
+        <span>🌾 농업</span>
+        <b id="agriculture">72</b>
+      </div>
+
+      <div class="bar">
+        <div id="agricultureBar"></div>
+      </div>
+
+      <div class="develop-row">
+        <span>💰 상업</span>
+        <b id="commerce">64</b>
+      </div>
+
+      <div class="bar">
+        <div id="commerceBar"></div>
+      </div>
+
+      <div class="develop-row">
+        <span>🛡️ 치안</span>
+        <b id="security">81</b>
+      </div>
+
+      <div class="bar">
+        <div id="securityBar"></div>
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button class="action" id="farmBtn">
+        <span>🌾</span>
+        <b>농업</b>
+        <small>금 -100</small>
+      </button>
+
+      <button class="action" id="commerceBtn">
+        <span>💰</span>
+        <b>상업</b>
+        <small>금 -100</small>
+      </button>
+
+      <button class="action" id="securityBtn">
+        <span>🛡️</span>
+        <b>치안</b>
+        <small>금 -100</small>
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- 하단 메뉴 -->
+  <nav class="bottom-menu">
+
+    <button>
+      <span>🏯</span>
+      <small>도시</small>
+    </button>
+
+    <button>
+      <span>👤</span>
+      <small>장수</small>
+    </button>
+
+    <button>
+      <span>🌾</span>
+      <small>내정</small>
+    </button>
+
+    <button>
+      <span>⚔️</span>
+      <small>군사</small>
+    </button>
+
+    <button>
+      <span>🤝</span>
+      <small>외교</small>
+    </button>
+
+    <button id="nextTurn">
+      <span>▶</span>
+      <small>다음 턴</small>
+    </button>
+
+  </nav>
+
+</div>
+
+<script src="game.js"></script>
+
+</body>
+</html>
