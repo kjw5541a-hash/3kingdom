@@ -7,22 +7,28 @@ html,
 body {
   margin: 0;
   padding: 0;
+
   width: 100%;
   height: 100%;
+
   overflow: hidden;
+
   background: #17130f;
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Apple SD Gothic Neo",
     "Noto Sans KR",
     sans-serif;
+
   color: #f5ead2;
 }
 
 button {
   font: inherit;
   color: inherit;
+
   border: 0;
   outline: 0;
 }
@@ -30,10 +36,15 @@ button {
 #game {
   width: 100%;
   height: 100dvh;
+
   max-width: 600px;
+
   margin: auto;
+
   position: relative;
+
   overflow: hidden;
+
   background: #272019;
 }
 
@@ -43,45 +54,64 @@ button {
 ========================= */
 
 .topbar {
+
   height: 72px;
+
   padding:
     calc(env(safe-area-inset-top) + 10px)
     16px
     8px;
 
   display: flex;
+
   align-items: center;
   justify-content: space-between;
 
   background: #191510;
-  border-bottom: 1px solid #594a34;
+
+  border-bottom:
+    1px solid #594a34;
+
   position: relative;
+
   z-index: 20;
 }
 
 .game-title {
+
   font-family: serif;
+
   font-size: 19px;
+
   font-weight: 700;
+
   letter-spacing: 1px;
 }
 
 #date {
+
   margin-top: 4px;
+
   font-size: 13px;
+
   color: #c7b28a;
 }
 
 .resources {
+
   display: flex;
+
   flex-direction: column;
+
   align-items: flex-end;
+
   gap: 3px;
 
   font-size: 13px;
 }
 
 .resources b {
+
   color: #f4d98a;
 }
 
@@ -91,9 +121,12 @@ button {
 ========================= */
 
 #map {
+
   position: absolute;
+
   top: 72px;
   bottom: 82px;
+
   left: 0;
   right: 0;
 
@@ -108,15 +141,15 @@ button {
     );
 }
 
-
-/* 지도 질감 */
-
 #map::before {
+
   content: "";
+
   position: absolute;
+
   inset: 0;
 
-  opacity: 0.16;
+  opacity: .16;
 
   background-image:
     repeating-linear-gradient(
@@ -133,34 +166,49 @@ button {
 /* 강 */
 
 .river {
+
   position: absolute;
+
   height: 18px;
 
-  background: rgba(55,90,105,.55);
+  background:
+    rgba(55,90,105,.55);
+
   border-radius: 50%;
+
   transform: rotate(-20deg);
 
   filter: blur(1px);
 }
 
 .r1 {
+
   width: 120%;
+
   left: -10%;
+
   top: 52%;
 }
 
 .r2 {
+
   width: 80%;
+
   right: -20%;
+
   top: 69%;
-  transform: rotate(14deg);
+
+  transform:
+    rotate(14deg);
 }
 
 
 /* 산 */
 
 .mountain {
+
   position: absolute;
+
   width: 150px;
   height: 50px;
 
@@ -182,31 +230,38 @@ button {
 }
 
 .m2 {
+
   right: -40px;
   top: 37%;
+
   transform: rotate(15deg);
 }
 
 .m3 {
+
   left: 15%;
   bottom: 8%;
+
   transform: rotate(-10deg);
 }
 
-
-/* 지도 중앙 글자 */
-
 .map-label {
+
   position: absolute;
+
   left: 50%;
   top: 17%;
 
-  transform: translateX(-50%);
+  transform:
+    translateX(-50%);
 
   font-family: serif;
+
   font-size: 34px;
 
-  color: rgba(55,42,25,.20);
+  color:
+    rgba(55,42,25,.20);
+
   letter-spacing: 12px;
 
   pointer-events: none;
@@ -218,17 +273,22 @@ button {
 ========================= */
 
 .city {
+
   position: absolute;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%);
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
 
   background: transparent;
 
   min-width: 55px;
+
   padding: 5px;
 
   cursor: pointer;
@@ -237,15 +297,20 @@ button {
 }
 
 .city-icon {
+
   width: 35px;
   height: 35px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   background: #eee2c4;
-  border: 2px solid #34291c;
+
+  border:
+    2px solid #34291c;
+
   border-radius: 50%;
 
   font-size: 20px;
@@ -255,19 +320,20 @@ button {
 }
 
 .city span:last-child {
+
   margin-top: 2px;
 
   padding: 2px 6px;
 
-  background: rgba(30,24,18,.75);
+  background:
+    rgba(30,24,18,.75);
+
   border-radius: 4px;
 
   font-size: 11px;
+
   white-space: nowrap;
 }
-
-
-/* 세력별 도시 */
 
 .city.cao .city-icon {
   border-color: #9c4c3c;
@@ -285,26 +351,29 @@ button {
   border-color: #666;
 }
 
-
-/* 터치 효과 */
-
 .city:active {
-  transform: translate(-50%, -50%) scale(.9);
+
+  transform:
+    translate(-50%, -50%)
+    scale(.9);
 }
 
 
 /* =========================
-   도시 패널
+   패널
 ========================= */
 
 .panel {
+
   position: absolute;
 
   left: 10px;
   right: 10px;
+
   bottom: 92px;
 
-  max-height: calc(100dvh - 150px);
+  max-height:
+    calc(100dvh - 150px);
 
   padding: 18px;
 
@@ -315,7 +384,9 @@ button {
       #211b15
     );
 
-  border: 1px solid #806a45;
+  border:
+    1px solid #806a45;
+
   border-radius: 16px;
 
   box-shadow:
@@ -325,21 +396,29 @@ button {
 
   overflow-y: auto;
 
-  animation: panelUp .2s ease-out;
+  animation:
+    panelUp .2s ease-out;
 }
 
 @keyframes panelUp {
 
   from {
-    transform: translateY(20px);
+
+    transform:
+      translateY(20px);
+
     opacity: 0;
+
   }
 
   to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 
+    transform:
+      translateY(0);
+
+    opacity: 1;
+
+  }
 }
 
 .hidden {
@@ -347,7 +426,9 @@ button {
 }
 
 .close {
+
   position: absolute;
+
   top: 10px;
   right: 12px;
 
@@ -356,54 +437,73 @@ button {
 
   border-radius: 50%;
 
-  background: rgba(255,255,255,.08);
+  background:
+    rgba(255,255,255,.08);
 
   font-size: 25px;
 }
 
 
-/* 패널 제목 */
+/* =========================
+   패널 제목
+========================= */
 
 .panel-title {
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 
   padding-bottom: 14px;
-  border-bottom: 1px solid #4f412e;
+
+  border-bottom:
+    1px solid #4f412e;
 }
 
 .panel-title > span {
+
   width: 46px;
   height: 46px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   background: #eee2c4;
+
   border-radius: 50%;
 
   font-size: 26px;
 }
 
 .panel-title h2 {
+
   margin: 0;
 
   font-family: serif;
+
   font-size: 22px;
 }
 
 .panel-title small {
+
   color: #b9a681;
 }
 
 
-/* 도시 정보 */
+/* =========================
+   도시 정보
+========================= */
 
 .city-stats {
+
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+
+  grid-template-columns:
+    repeat(2, 1fr);
 
   gap: 8px;
 
@@ -411,33 +511,45 @@ button {
 }
 
 .city-stats div {
+
   padding: 10px;
 
-  background: rgba(255,255,255,.045);
+  background:
+    rgba(255,255,255,.045);
+
   border-radius: 8px;
 
   display: flex;
+
   justify-content: space-between;
 }
 
 .city-stats span {
+
   color: #a99a7e;
+
   font-size: 12px;
 }
 
 .city-stats b {
+
   font-size: 13px;
 }
 
 
-/* 개발 */
+/* =========================
+   개발
+========================= */
 
 .development {
+
   margin-top: 16px;
 }
 
 .develop-row {
+
   display: flex;
+
   justify-content: space-between;
 
   margin-top: 9px;
@@ -446,35 +558,144 @@ button {
 }
 
 .develop-row b {
+
   color: #e4ca88;
 }
 
 .bar {
+
   height: 5px;
 
   margin-top: 5px;
 
   background: #17130f;
+
   border-radius: 5px;
+
   overflow: hidden;
 }
 
 .bar div {
+
   height: 100%;
 
   width: 0;
 
   background: #b88b42;
 
-  transition: width .25s;
+  transition:
+    width .25s;
 }
 
 
-/* 행동 */
+/* =========================
+   섹션
+========================= */
+
+.section-title {
+
+  margin-top: 18px;
+
+  padding-bottom: 7px;
+
+  border-bottom:
+    1px solid #4f412e;
+
+  font-size: 13px;
+
+  color: #d9c69d;
+}
+
+
+/* =========================
+   도시 장수
+========================= */
+
+.general-mini-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-top: 8px;
+}
+
+.general-mini {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 8px 10px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border-radius: 7px;
+}
+
+.general-mini-left {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.general-mini-avatar {
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #3a3024;
+
+  border-radius: 50%;
+
+  font-size: 17px;
+}
+
+.general-mini-name {
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.general-mini-role {
+
+  font-size: 10px;
+
+  color: #998c74;
+}
+
+.general-mini-politics {
+
+  color: #d8bd7a;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   도시 행동
+========================= */
 
 .actions {
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
 
   gap: 8px;
 
@@ -482,16 +703,21 @@ button {
 }
 
 .action {
+
   min-height: 72px;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
 
   background: #403427;
 
-  border: 1px solid #625039;
+  border:
+    1px solid #625039;
+
   border-radius: 9px;
 }
 
@@ -500,20 +726,248 @@ button {
 }
 
 .action b {
+
   margin-top: 3px;
+
   font-size: 12px;
 }
 
 .action small {
+
   margin-top: 2px;
 
   color: #a89b83;
+
   font-size: 9px;
 }
 
 .action:active {
+
   background: #5a4730;
+
   transform: scale(.97);
+}
+
+
+/* =========================
+   장수 상세
+========================= */
+
+.general-header {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding-bottom: 14px;
+
+  border-bottom:
+    1px solid #4f412e;
+}
+
+.general-avatar {
+
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #65503a,
+      #33291e
+    );
+
+  border:
+    1px solid #806a45;
+
+  border-radius: 50%;
+
+  font-size: 32px;
+}
+
+.general-header h2 {
+
+  margin: 0 0 3px;
+
+  font-family: serif;
+
+  font-size: 23px;
+}
+
+#generalFaction {
+
+  color: #d7bc7c;
+
+  font-size: 12px;
+}
+
+#generalCity {
+
+  color: #988b74;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   장수 능력치
+========================= */
+
+.stat-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 8px;
+
+  margin-top: 16px;
+}
+
+.stat-grid div {
+
+  padding: 11px 5px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border-radius: 8px;
+}
+
+.stat-grid span {
+
+  color: #9f9178;
+
+  font-size: 10px;
+}
+
+.stat-grid b {
+
+  margin-top: 4px;
+
+  font-family: serif;
+
+  font-size: 18px;
+
+  color: #e2c983;
+}
+
+.general-description {
+
+  margin-top: 15px;
+
+  padding: 12px;
+
+  background:
+    rgba(255,255,255,.035);
+
+  border-radius: 8px;
+
+  color: #b8aa90;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   장수 목록
+========================= */
+
+.general-list {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.general-card {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 11px;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid rgba(255,255,255,.05);
+
+  border-radius: 9px;
+}
+
+.general-card-left {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.general-card-avatar {
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #3a3024;
+
+  border-radius: 50%;
+
+  font-size: 22px;
+}
+
+.general-card-name {
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+.general-card-info {
+
+  margin-top: 2px;
+
+  color: #93856e;
+
+  font-size: 10px;
+}
+
+.general-card-stat {
+
+  text-align: right;
+
+  color: #d9bd7d;
+
+  font-size: 11px;
 }
 
 
@@ -522,13 +976,15 @@ button {
 ========================= */
 
 .bottom-menu {
+
   position: absolute;
 
   left: 0;
   right: 0;
   bottom: 0;
 
-  height: calc(82px + env(safe-area-inset-bottom));
+  height:
+    calc(82px + env(safe-area-inset-bottom));
 
   padding:
     6px
@@ -536,19 +992,26 @@ button {
     calc(6px + env(safe-area-inset-bottom));
 
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+
+  grid-template-columns:
+    repeat(6, 1fr);
 
   background: #18130f;
-  border-top: 1px solid #594a34;
+
+  border-top:
+    1px solid #594a34;
 
   z-index: 40;
 }
 
 .bottom-menu button {
+
   background: transparent;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
 
@@ -558,26 +1021,32 @@ button {
 }
 
 .bottom-menu button:active {
-  background: rgba(255,255,255,.08);
+
+  background:
+    rgba(255,255,255,.08);
 }
 
 .bottom-menu span {
+
   font-size: 19px;
 }
 
 .bottom-menu small {
+
   color: #a99a80;
+
   font-size: 9px;
 }
 
-
-/* 다음 턴 */
-
 #nextTurn {
+
   background: #57452d;
-  border: 1px solid #80663e;
+
+  border:
+    1px solid #80663e;
 }
 
 #nextTurn small {
+
   color: #f0d69b;
 }
