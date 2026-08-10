@@ -1,7 +1,7 @@
 /* =========================================================
    三國志 · 天下
-   Alpha 0.2
-   장수 시스템
+   Alpha 0.3
+   장수 + 군사 시스템
 ========================================================= */
 
 
@@ -28,7 +28,11 @@ const game = {
 
   selectedCity: null,
 
-  selectedGeneral: null
+  selectedGeneral: null,
+
+  attackGeneral: null,
+  attackTarget: null,
+  attackTroops: 1000
 
 };
 
@@ -160,6 +164,46 @@ const cities = {
   }
 
 };
+
+
+/* =========================================================
+   군사 연결망 · Alpha 0.3
+========================================================= */
+
+const neighbors = {
+  "낙양": ["장안", "업", "허창", "신야"],
+  "허창": ["낙양", "업", "신야", "양양"],
+  "장안": ["낙양", "성도"],
+  "업": ["낙양", "허창", "북해"],
+  "신야": ["낙양", "허창", "양양", "건업"],
+  "건업": ["신야", "회계"],
+  "회계": ["건업"],
+  "성도": ["장안", "양양"],
+  "양양": ["신야", "허창", "성도", "건업"],
+  "북해": ["업"]
+};
+
+const PLAYER_FACTION = "조조 세력";
+
+function isPlayerCity(cityName) {
+  return !!cities[cityName] && cities[cityName].faction === PLAYER_FACTION;
+}
+
+function getFactionClass(faction) {
+  if (faction === "조조 세력") return "cao";
+  if (faction === "유비 세력") return "liu";
+  if (faction === "손견 세력") return "sun";
+  return "neutral";
+}
+
+function refreshCityMarkers() {
+  document.querySelectorAll(".city").forEach(marker => {
+    const city = cities[marker.dataset.city];
+    if (!city) return;
+    marker.classList.remove("cao", "liu", "sun", "neutral");
+    marker.classList.add(getFactionClass(city.faction));
+  });
+}
 
 
 /* =========================================================
@@ -400,6 +444,39 @@ const securityBar =
 const cityGenerals =
   document.getElementById("cityGenerals");
 
+const militaryPanel =
+  document.getElementById("militaryPanel");
+
+const attackFromEl =
+  document.getElementById("attackFrom");
+
+const targetCityEl =
+  document.getElementById("targetCity");
+
+const attackGeneralList =
+  document.getElementById("attackGeneralList");
+
+const troopRange =
+  document.getElementById("troopRange");
+
+const troopValue =
+  document.getElementById("troopValue");
+
+const troopMax =
+  document.getElementById("troopMax");
+
+const foodCostEl =
+  document.getElementById("foodCost");
+
+const attackPowerPreview =
+  document.getElementById("attackPowerPreview");
+
+const defensePowerPreview =
+  document.getElementById("defensePowerPreview");
+
+const militaryMessage =
+  document.getElementById("militaryMessage");
+
 
 /* =========================================================
    도시 선택
@@ -477,6 +554,8 @@ function openCity(cityName) {
   cityPanel.classList.remove(
     "hidden"
   );
+
+  refreshCityMarkers();
 
 }
 
@@ -996,6 +1075,544 @@ function updateResources() {
 }
 
 
+
+/* =========================================================
+   군사 · 출진 시스템
+========================================================= */
+
+document
+  .getElementById("militaryMenu")
+  .addEventListener("click", openMilitaryPanel);
+
+document
+  .getElementById("closeMilitaryPanel")
+  .addEventListener("click", () => {
+    militaryPanel.classList.add("hidden");
+  });
+
+troopRange.addEventListener("input", () => {
+  game.attackTroops = Number(troopRange.value);
+  updateBattlePreview();
+});
+
+targetCityEl.addEventListener("change", () => {
+  game.attackTarget = targetCityEl.value;
+  renderAttackGenerals();
+  updateBattlePreview();
+});
+
+function openMilitaryPanel() {
+
+  const source =
+    game.selectedCity && isPlayerCity(game.selectedCity)
+      ? game.selectedCity
+      : "낙양";
+
+  game.selectedCity = source;
+  game.attackGeneral = null;
+  game.attackTarget = null;
+
+  attackFromEl.textContent = source;
+
+  renderTargetCities();
+  renderAttackGenerals();
+  updateTroopRange();
+
+  militaryMessage.textContent =
+    "인접한 적 도시를 선택하고 출진 장수를 정하세요.";
+
+  militaryPanel.classList.remove("hidden");
+}
+
+function renderTargetCities() {
+
+  targetCityEl.innerHTML = "";
+
+  const source = game.selectedCity;
+  const possible =
+    (neighbors[source] || [])
+      .filter(name => cities[name] && cities[name].faction !== PLAYER_FACTION);
+
+  if (!possible.length) {
+    const option = document.createElement("option");
+    option.textContent = "공격 가능한 도시 없음";
+    option.value = "";
+    targetCityEl.appendChild(option);
+    game.attackTarget = null;
+    return;
+  }
+
+  possible.forEach(name => {
+    const option = document.createElement("option");
+    const city = cities[name];
+
+    option.value = name;
+    option.textContent =
+      `${name} · ${city.faction} · 병력 ${city.soldiers.toLocaleString()}`;
+
+    targetCityEl.appendChild(option);
+  });
+
+  game.attackTarget = possible[0];
+}
+
+function renderAttackGenerals() {
+
+  attackGeneralList.innerHTML = "";
+
+  const source = cities[game.selectedCity];
+
+  if (!source || !source.generals.length) {
+    attackGeneralList.innerHTML =
+      '<div class="empty-message">출진 가능한 장수가 없습니다.</div>';
+    return;
+  }
+
+  source.generals.forEach(name => {
+
+    const general = generals[name];
+    if (!general) return;
+
+    const card = document.createElement("button");
+    card.className = "attack-general";
+    card.classList.toggle(
+      "selected",
+      game.attackGeneral === name
+    );
+
+    card.innerHTML = `
+      <span class="attack-avatar">👤</span>
+      <span class="attack-general-info">
+        <b>${name}</b>
+        <small>통솔 ${general.command} · 무력 ${general.power}</small>
+      </span>
+      <span class="attack-check">
+        ${game.attackGeneral === name ? "✓" : ""}
+      </span>
+    `;
+
+    card.addEventListener("click", () => {
+      game.attackGeneral = name;
+      renderAttackGenerals();
+      updateBattlePreview();
+    });
+
+    attackGeneralList.appendChild(card);
+  });
+
+  if (!game.attackGeneral) {
+    game.attackGeneral = source.generals[0];
+    renderAttackGenerals();
+  }
+}
+
+function updateTroopRange() {
+
+  const source = cities[game.selectedCity];
+
+  if (!source) return;
+
+  const max = Math.max(
+    1000,
+    Math.floor(source.soldiers * 0.8 / 500) * 500
+  );
+
+  troopRange.max = max;
+  troopRange.min = Math.min(1000, max);
+
+  game.attackTroops =
+    Math.min(
+      Math.max(1000, game.attackTroops),
+      max
+    );
+
+  troopRange.value = game.attackTroops;
+  troopMax.textContent = max.toLocaleString();
+
+  updateBattlePreview();
+}
+
+function calculateAttackPower(troops, general) {
+
+  if (!general) return 0;
+
+  const leaderBonus =
+    0.65 +
+    (general.command / 200) +
+    (general.power / 400);
+
+  return Math.floor(troops * leaderBonus);
+}
+
+function calculateDefensePower(city) {
+
+  if (!city) return 0;
+
+  const commander =
+    getBestCommandGeneral(city);
+
+  const commandBonus =
+    commander
+      ? commander.command / 100
+      : 0.45;
+
+  const securityBonus =
+    1 + city.security / 250;
+
+  return Math.floor(
+    city.soldiers *
+    (0.7 + commandBonus * 0.35) *
+    securityBonus
+  );
+}
+
+function getBestCommandGeneral(city) {
+
+  if (!city.generals || !city.generals.length) {
+    return null;
+  }
+
+  return city.generals
+    .map(name => generals[name])
+    .filter(Boolean)
+    .sort((a, b) => b.command - a.command)[0] || null;
+}
+
+function updateBattlePreview() {
+
+  const source = cities[game.selectedCity];
+  const target = cities[game.attackTarget];
+  const leader = generals[game.attackGeneral];
+
+  if (!source || !target || !leader) {
+    attackPowerPreview.textContent = "0";
+    defensePowerPreview.textContent = "0";
+    foodCostEl.textContent = "0";
+    return;
+  }
+
+  const troops = Number(troopRange.value);
+  game.attackTroops = troops;
+
+  const foodCost =
+    Math.ceil(troops * 0.5);
+
+  troopValue.textContent =
+    troops.toLocaleString();
+
+  foodCostEl.textContent =
+    foodCost.toLocaleString();
+
+  attackPowerPreview.textContent =
+    calculateAttackPower(troops, leader).toLocaleString();
+
+  defensePowerPreview.textContent =
+    calculateDefensePower(target).toLocaleString();
+}
+
+document
+  .getElementById("attackBtn")
+  .addEventListener("click", launchAttack);
+
+function launchAttack() {
+
+  const sourceName = game.selectedCity;
+  const targetName = game.attackTarget;
+  const leaderName = game.attackGeneral;
+
+  const source = cities[sourceName];
+  const target = cities[targetName];
+  const leader = generals[leaderName];
+
+  if (!source || !target || !leader) {
+    militaryMessage.textContent =
+      "출진 정보를 모두 선택해주세요.";
+    return;
+  }
+
+  if (!isPlayerCity(sourceName)) {
+    militaryMessage.textContent =
+      "조조 세력의 도시에서만 출진할 수 있습니다.";
+    return;
+  }
+
+  if (!(neighbors[sourceName] || []).includes(targetName)) {
+    militaryMessage.textContent =
+      "인접한 도시만 공격할 수 있습니다.";
+    return;
+  }
+
+  const troops = Number(troopRange.value);
+  const foodCost = Math.ceil(troops * 0.5);
+
+  if (troops <= 0 || troops > source.soldiers) {
+    militaryMessage.textContent =
+      "출진 병력을 확인해주세요.";
+    return;
+  }
+
+  if (game.food < foodCost) {
+    militaryMessage.textContent =
+      `군량이 부족합니다. 필요 군량 ${foodCost.toLocaleString()}.`;
+    return;
+  }
+
+  if (game.gold < 100) {
+    militaryMessage.textContent =
+      "출진 준비금으로 금 100이 필요합니다.";
+    return;
+  }
+
+  const attackPower =
+    calculateAttackPower(troops, leader);
+
+  const defensePower =
+    calculateDefensePower(target);
+
+  const luck =
+    0.88 + Math.random() * 0.24;
+
+  const finalAttack =
+    Math.floor(attackPower * luck);
+
+  const finalDefense =
+    Math.floor(defensePower * (0.94 + Math.random() * 0.12));
+
+  const attackerLossRatio =
+    Math.min(
+      0.78,
+      0.16 +
+      finalDefense / Math.max(finalAttack, 1) * 0.22
+    );
+
+  const defenderLossRatio =
+    Math.min(
+      0.92,
+      0.28 +
+      finalAttack / Math.max(finalDefense, 1) * 0.48
+    );
+
+  const attackerLoss =
+    Math.max(
+      1,
+      Math.floor(troops * attackerLossRatio)
+    );
+
+  const defenderLoss =
+    Math.max(
+      1,
+      Math.floor(target.soldiers * defenderLossRatio)
+    );
+
+  game.gold -= 100;
+  game.food -= foodCost;
+
+  source.soldiers =
+    Math.max(
+      0,
+      source.soldiers - troops
+    );
+
+  if (finalAttack > finalDefense) {
+
+    target.faction = PLAYER_FACTION;
+
+    target.soldiers =
+      Math.max(
+        500,
+        target.soldiers - defenderLoss
+      );
+
+    const survivors =
+      Math.max(
+        500,
+        troops - attackerLoss
+      );
+
+    target.soldiers += survivors;
+
+    source.generals =
+      source.generals.filter(
+        name => name !== leaderName
+      );
+
+    target.generals.push(leaderName);
+
+    leader.city = targetName;
+
+    militaryMessage.innerHTML = `
+      <b>🎉 ${targetName} 점령!</b><br>
+      ${leaderName}의 부대가 승리했습니다.<br>
+      아군 피해 ${attackerLoss.toLocaleString()}명 ·
+      적 피해 ${defenderLoss.toLocaleString()}명
+    `;
+
+    game.selectedCity = targetName;
+    game.attackTarget = null;
+    game.attackGeneral = null;
+
+    refreshCityMarkers();
+    updateResources();
+
+    setTimeout(() => {
+      militaryPanel.classList.add("hidden");
+      openCity(targetName);
+    }, 900);
+
+  } else {
+
+    const retreat =
+      Math.max(
+        300,
+        troops - attackerLoss
+      );
+
+    source.soldiers += retreat;
+
+    target.soldiers =
+      Math.max(
+        500,
+        target.soldiers - Math.floor(defenderLoss * 0.7)
+      );
+
+    militaryMessage.innerHTML = `
+      <b>⚔️ 공격 실패</b><br>
+      ${leaderName} 부대가 퇴각했습니다.<br>
+      아군 피해 ${attackerLoss.toLocaleString()}명 ·
+      적 피해 ${Math.floor(defenderLoss * 0.7).toLocaleString()}명
+    `;
+
+    updateResources();
+    openCity(sourceName);
+  }
+
+  updateTroopRange();
+  updateBattlePreview();
+}
+
+
+/* =========================================================
+   적 세력 AI
+========================================================= */
+
+function runEnemyAI() {
+
+  const enemies = [
+    "유비 세력",
+    "손견 세력"
+  ];
+
+  enemies.forEach(faction => {
+
+    const enemyCities =
+      Object.entries(cities)
+        .filter(([name, city]) => city.faction === faction);
+
+    enemyCities.forEach(([name, city]) => {
+
+      if (city.soldiers < 3500) return;
+      if (Math.random() > 0.18) return;
+
+      const targets =
+        (neighbors[name] || [])
+          .filter(targetName =>
+            isPlayerCity(targetName)
+          );
+
+      if (!targets.length) return;
+
+      const targetName =
+        targets[Math.floor(Math.random() * targets.length)];
+
+      const target = cities[targetName];
+
+      const troops =
+        Math.min(
+          Math.floor(city.soldiers * 0.45 / 500) * 500,
+          city.soldiers - 1000
+        );
+
+      if (troops < 1000) return;
+
+      const leader =
+        getBestCommandGeneral(city);
+
+      const attackPower =
+        calculateAttackPower(
+          troops,
+          leader || {
+            command: 55,
+            power: 50
+          }
+        );
+
+      const defensePower =
+        calculateDefensePower(target);
+
+      const finalAttack =
+        attackPower * (0.9 + Math.random() * 0.2);
+
+      const finalDefense =
+        defensePower * (0.9 + Math.random() * 0.2);
+
+      city.soldiers -= troops;
+
+      if (finalAttack > finalDefense) {
+
+        const defenderLoss =
+          Math.min(
+            target.soldiers,
+            Math.floor(target.soldiers * 0.65)
+          );
+
+        target.soldiers =
+          Math.max(
+            500,
+            target.soldiers - defenderLoss
+          );
+
+        target.faction = faction;
+
+        if (target.generals.length) {
+          target.generals = [];
+        }
+
+      } else {
+
+        city.soldiers +=
+          Math.floor(troops * 0.55);
+
+        target.soldiers =
+          Math.max(
+            500,
+            target.soldiers -
+            Math.floor(target.soldiers * 0.18)
+          );
+      }
+
+    });
+
+  });
+
+}
+
+
+/* =========================================================
+   군사 메뉴용 도시 선택 보조
+========================================================= */
+
+document
+  .getElementById("cityMenu")
+  .addEventListener("click", () => {
+
+    if (game.selectedCity) {
+      openCity(game.selectedCity);
+    } else {
+      openCity("낙양");
+    }
+
+  });
+
 /* =========================================================
    다음 턴
 ========================================================= */
@@ -1058,6 +1675,8 @@ function nextTurn() {
   game.food +=
     foodIncome;
 
+  runEnemyAI();
+  refreshCityMarkers();
 
   updateResources();
 
@@ -1094,3 +1713,4 @@ function updateDate() {
 updateResources();
 
 updateDate();
+refreshCityMarkers();

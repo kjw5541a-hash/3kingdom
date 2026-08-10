@@ -1050,3 +1050,213 @@ button {
 
   color: #f0d69b;
 }
+
+/* =========================================================
+   Alpha 0.3 · 군사 시스템
+========================================================= */
+
+.battle-box {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.battle-side {
+  min-width: 0;
+  padding: 10px;
+  background: rgba(255,255,255,.045);
+  border-radius: 9px;
+}
+
+.battle-side span {
+  display: block;
+  color: #9f9178;
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.battle-side b {
+  display: block;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.battle-side select {
+  width: 100%;
+  background: #30271d;
+  border: 0;
+  color: #f5ead2;
+  font-size: 11px;
+  outline: 0;
+}
+
+.battle-arrow {
+  text-align: center;
+  font-size: 20px;
+  color: #d8b967;
+}
+
+.attack-general-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.attack-general {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px;
+  text-align: left;
+  background: rgba(255,255,255,.045);
+  border: 1px solid transparent;
+  border-radius: 9px;
+}
+
+.attack-general.selected {
+  border-color: #a88445;
+  background: rgba(168,132,69,.16);
+}
+
+.attack-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4a3b2b;
+  border-radius: 50%;
+}
+
+.attack-general-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.attack-general-info b {
+  font-size: 12px;
+}
+
+.attack-general-info small {
+  color: #a99a7e;
+  font-size: 9px;
+}
+
+.attack-check {
+  width: 20px;
+  text-align: center;
+  color: #e4ca88;
+  font-weight: 700;
+}
+
+.troop-control {
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(255,255,255,.045);
+  border-radius: 9px;
+}
+
+.troop-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.troop-row b {
+  color: #e4ca88;
+}
+
+#troopRange {
+  width: 100%;
+  margin: 12px 0 4px;
+  accent-color: #b88b42;
+}
+
+.troop-hint {
+  display: flex;
+  justify-content: space-between;
+  color: #93856e;
+  font-size: 9px;
+}
+
+.troop-hint b {
+  color: #d5bd82;
+}
+
+.battle-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.battle-preview > div {
+  padding: 10px;
+  background: rgba(255,255,255,.045);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.battle-preview span {
+  display: block;
+  color: #9f9178;
+  font-size: 9px;
+}
+
+.battle-preview b {
+  display: block;
+  margin-top: 3px;
+  font-size: 16px;
+  color: #e2c983;
+}
+
+.attack-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  background: #5c3b2d;
+  border: 1px solid #8b6248;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.attack-button:active {
+  transform: scale(.98);
+}
+
+.military-message {
+  min-height: 34px;
+  margin-top: 9px;
+  padding: 7px 4px;
+  color: #c8b99b;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.military-message b {
+  color: #e4ca88;
+}
+
+.empty-message {
+  padding: 12px;
+  color: #958871;
+  font-size: 11px;
+  text-align: center;
+  background: rgba(255,255,255,.035);
+  border-radius: 8px;
+}
+
+#militaryPanel {
+  max-height: calc(100dvh - 115px);
+}

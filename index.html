@@ -444,6 +444,71 @@
   </section>
 
 
+
+  <!-- =========================
+       군사 패널 · Alpha 0.3
+  ========================== -->
+
+  <section id="militaryPanel" class="panel hidden">
+
+    <button id="closeMilitaryPanel" class="close">×</button>
+
+    <div class="panel-title">
+      <span>⚔️</span>
+      <div>
+        <h2>출진</h2>
+        <small>인접 도시를 공격합니다</small>
+      </div>
+    </div>
+
+    <div class="battle-box">
+      <div class="battle-side">
+        <span>출진 도시</span>
+        <b id="attackFrom">낙양</b>
+      </div>
+      <div class="battle-arrow">→</div>
+      <div class="battle-side">
+        <span>공격 대상</span>
+        <select id="targetCity"></select>
+      </div>
+    </div>
+
+    <div class="section-title">⚔️ 출진 장수</div>
+    <div id="attackGeneralList" class="attack-general-list"></div>
+
+    <div class="section-title">🪖 출진 병력</div>
+    <div class="troop-control">
+      <div class="troop-row">
+        <span>병력</span>
+        <b><span id="troopValue">1000</span>명</b>
+      </div>
+      <input id="troopRange" type="range" min="1000" max="12000" step="500" value="1000">
+      <div class="troop-hint">
+        <span>최대 <b id="troopMax">0</b>명</span>
+        <span>군량 소모 <b id="foodCost">500</b></span>
+      </div>
+    </div>
+
+    <div class="battle-preview">
+      <div>
+        <span>예상 공격력</span>
+        <b id="attackPowerPreview">0</b>
+      </div>
+      <div>
+        <span>수비 병력</span>
+        <b id="defensePowerPreview">0</b>
+      </div>
+    </div>
+
+    <button id="attackBtn" class="attack-button">
+      ⚔️ 출진 명령
+    </button>
+
+    <div id="militaryMessage" class="military-message"></div>
+
+  </section>
+
+
   <!-- =========================
        하단 메뉴
   ========================== -->
@@ -468,7 +533,7 @@
     </button>
 
 
-    <button>
+    <button id="militaryMenu">
       <span>⚔️</span>
       <small>군사</small>
     </button>
